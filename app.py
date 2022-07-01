@@ -1,17 +1,16 @@
-
-url = "https://www.youtube.com/playlist?list=PLeo1K3hjS3uvCeTYTeyfe0-rN5r8zn9rw"
-path = r"C:\Users\Peniel\Desktop\Programming projects\Autodownload\chromedriver.exe"
-
 from tqdm import tqdm
 from pytube import Playlist
 from pytube import YouTube
 
 
+url = "https://www.youtube.com/playlist?list=PLeo1K3hjS3uvCeTYTeyfe0-rN5r8zn9rw"
+path = r"C:\Users\Peniel\Desktop\Programming projects\Autodownload\chromedriver.exe"
+
+
 class PlaylistDownloader:
-    def __init__(self, url: str, resolution) -> None:
+    def __init__(self, url: str, resolution: int) -> None:
         self.url = url 
         self.resolution = resolution
-        self.download_videos(self.url)
 
     def percent(self):
         pass
@@ -21,17 +20,18 @@ class PlaylistDownloader:
         # the 
         pass 
 
-    def download_videos(self, url: str) -> None:
-        playlist = Playlist(url = url)
+    def download_videos(self) -> None:
+        playlist = Playlist(self.url)
         playlist_name = playlist.title
         length = len(playlist.video_urls)
         print(f"Downloading Playlist: {playlist_name} - {length} vidoes")
-        
 
         for video_url in playlist.video_urls:
             yt_video = YouTube(video_url)
             stream = yt_video.streams.filter(resolution=self.resolution)
             filesize = yt_video.filesize
+
+            # progress bar section using tqpm
 
         for video in playlist.videos:
             titles = video.title
