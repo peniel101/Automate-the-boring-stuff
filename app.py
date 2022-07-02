@@ -1,4 +1,5 @@
 from tokenize import Triple
+from turtle import tilt
 from tqdm import tqdm
 from pytube import Playlist, YouTube
 import os 
@@ -10,12 +11,17 @@ path = r"C:\Users\Peniel\Desktop\Programming projects\Autodownload\chromedriver.
 
 
 class ytDownloader:
-    def __init__(self, url, resolution) -> None:
+    def __init__(self, url, resolution="720p") -> None:
         self.url = url
         self.resolution = str(resolution)
 
     def download_audio(self):
-        pass
+        video = YouTube(self.url, on_progress_callback=on_progress)
+        stream = video.streams.filter(res=self.resolution)
+        filesize = (stream.filesize) // 1000000
+        title = video.title
+        print(f'{title} - {filesize} MB')
+        stream.download()
 
     def download_video(self):
         pass
@@ -26,26 +32,26 @@ class ytDownloader:
         playlist_name = playlist.title
         length = len(playlist.video_urls)
         print(f"Downloading Playlist: {playlist_name} contains {length} vidoes")
-        # if you want to download only the videos 
-        if video == True:
+
+        for video_url in playlist.video_urls:
+            yt_video = YouTube(video_url, on_progress_callback=on_progress)
+            title = yt_video.title
             
-            for video_url in playlist.video_urls:
-                yt_video = YouTube(video_url, on_progress_callback=on_progress)
+            if video == True:
                 stream = yt_video.streams.filter(res=self.resolution).first()
-                title = yt_video.title
                 filesize = stream.filesize
                 print(f'{title} with size of {filesize}')
-                # creating a folder to store the playlist videos 
-                # download_dir = r"C:\Users\Peniel\Desktop\Programming projects"
-                # current_dir = os.path.join(download_dir, playlist_name)
-                # path = os.makedirs(current_dir)
-            
+                    # creating a folder to store the playlist videos 
+                    # download_dir = r"C:\Users\Peniel\Desktop\Programming projects"
+                    # current_dir = os.path.join(download_dir, playlist_name)
+                    # path = os.makedirs(current_dir)                
                 stream.download()
+                    # add your own progress bar 
+            # if you want to download the audio only 
+            elif audio == True:
+                audio_stream = yt_video.streams.filter(only_audio=True)
+                audio_stream.download()
 
-        # if you want to download the audio only 
-        elif audio == True:
-            pass
-        
             # progress bar section using tqpm
         # what if the  use wants to download the audio of the playlist 
         
@@ -55,7 +61,7 @@ class ytDownloader:
 
     
 object = ytDownloader(url=url, resolution="720p")
-object.download_videos()
+object.download_playlist(video=False, audio=True)
 
     
 # create folder and store the videos 
