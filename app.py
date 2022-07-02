@@ -1,41 +1,61 @@
+from tokenize import Triple
 from tqdm import tqdm
-from pytube import Playlist
-from pytube import YouTube
+from pytube import Playlist, YouTube
+import os 
+from pytube.cli import on_progress
 
 
 url = "https://www.youtube.com/playlist?list=PLeo1K3hjS3uvCeTYTeyfe0-rN5r8zn9rw"
 path = r"C:\Users\Peniel\Desktop\Programming projects\Autodownload\chromedriver.exe"
 
 
-class PlaylistDownloader:
-    def __init__(self, url: str, resolution: int) -> None:
-        self.url = url 
-        self.resolution = resolution
+class ytDownloader:
+    def __init__(self, url, resolution) -> None:
+        self.url = url
+        self.resolution = str(resolution)
 
-    def percent(self):
+    def download_audio(self):
         pass
 
-    def progress_bar(self, stream, chunk, file_handle, bytes_remaining):
-        # get the size 
-        # the 
-        pass 
+    def download_video(self):
+        pass
 
-    def download_videos(self) -> None:
+    def download_playlist(self, video=True, audio=False):
+        
         playlist = Playlist(self.url)
         playlist_name = playlist.title
         length = len(playlist.video_urls)
-        print(f"Downloading Playlist: {playlist_name} - {length} vidoes")
+        print(f"Downloading Playlist: {playlist_name} contains {length} vidoes")
+        # if you want to download only the videos 
+        if video == True:
+            
+            for video_url in playlist.video_urls:
+                yt_video = YouTube(video_url, on_progress_callback=on_progress)
+                stream = yt_video.streams.filter(res=self.resolution).first()
+                title = yt_video.title
+                filesize = stream.filesize
+                print(f'{title} with size of {filesize}')
+                # creating a folder to store the playlist videos 
+                # download_dir = r"C:\Users\Peniel\Desktop\Programming projects"
+                # current_dir = os.path.join(download_dir, playlist_name)
+                # path = os.makedirs(current_dir)
+            
+                stream.download()
 
-        for video_url in playlist.video_urls:
-            yt_video = YouTube(video_url)
-            stream = yt_video.streams.filter(resolution=self.resolution)
-            filesize = yt_video.filesize
-
+        # if you want to download the audio only 
+        elif audio == True:
+            pass
+        
             # progress bar section using tqpm
-
+        # what if the  use wants to download the audio of the playlist 
+        
         for video in playlist.videos:
             titles = video.title
             print(titles)
+
+    
+object = ytDownloader(url=url, resolution="720p")
+object.download_videos()
 
     
 # create folder and store the videos 
