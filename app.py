@@ -1,5 +1,3 @@
-from tokenize import Triple
-from turtle import tilt
 from tqdm import tqdm
 from pytube import Playlist, YouTube
 import os 
@@ -15,19 +13,22 @@ class ytDownloader:
         self.url = url
         self.resolution = str(resolution)
 
-    def download_audio(self):
+    def download_video(self):
         video = YouTube(self.url, on_progress_callback=on_progress)
         stream = video.streams.filter(res=self.resolution)
-        filesize = (stream.filesize) // 1000000
+        v_filesize = (stream.filesize) // 1000000
         title = video.title
-        print(f'{title} - {filesize} MB')
+        print(f'{title} - {v_filesize} MB')
         stream.download()
 
-    def download_video(self):
-        pass
+    def download_audio(self, ):
+        audio = YouTube(self.url, on_progress_callback=on_progress)
+        audio_streams = audio.streams.filter(only_audio=True).first()
+        a_filesize = audio_streams.filesize
+        print(f'{audio.title} with size of {a_filesize} MB')
+        audio_streams.download()
 
     def download_playlist(self, video=True, audio=False):
-        
         playlist = Playlist(self.url)
         playlist_name = playlist.title
         length = len(playlist.video_urls)
@@ -39,8 +40,8 @@ class ytDownloader:
             
             if video == True:
                 stream = yt_video.streams.filter(res=self.resolution).first()
-                filesize = stream.filesize
-                print(f'{title} with size of {filesize}')
+                video_filesize = (stream.filesize) // 1000000
+                print(f'{title} with size of {video_filesize} MB')
                     # creating a folder to store the playlist videos 
                     # download_dir = r"C:\Users\Peniel\Desktop\Programming projects"
                     # current_dir = os.path.join(download_dir, playlist_name)
@@ -49,7 +50,9 @@ class ytDownloader:
                     # add your own progress bar 
             # if you want to download the audio only 
             elif audio == True:
-                audio_stream = yt_video.streams.filter(only_audio=True)
+                audio_stream = yt_video.streams.filter(only_audio=True).first()
+                audio_filesize = (audio_stream.filesize) // 1000000
+                print(f'{title} with size of {audio_filesize} MB')
                 audio_stream.download()
 
             # progress bar section using tqpm
@@ -60,8 +63,8 @@ class ytDownloader:
             print(titles)
 
     
-object = ytDownloader(url=url, resolution="720p")
-object.download_playlist(video=False, audio=True)
+
+
 
     
 # create folder and store the videos 
