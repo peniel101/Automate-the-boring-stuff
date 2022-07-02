@@ -21,7 +21,7 @@ class ytDownloader:
         print(f'{title} - {v_filesize} MB')
         stream.download()
 
-    def download_audio(self, ):
+    def download_audio(self):
         audio = YouTube(self.url, on_progress_callback=on_progress)
         audio_streams = audio.streams.filter(only_audio=True).first()
         a_filesize = audio_streams.filesize
@@ -62,9 +62,11 @@ class ytDownloader:
             titles = video.title
             print(titles)
 
-    
 
+url = "https://www.youtube.com/watch?v=wppSoyH-8No"   
 
+yt = ytDownloader(url)
+yt.download_audio()
 
     
 # create folder and store the videos 
