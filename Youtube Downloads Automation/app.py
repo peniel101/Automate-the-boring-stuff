@@ -21,12 +21,12 @@ class ytDownloader:
         print(f'{title} - {v_filesize} MB')
         vi_stream.download()
 
-    def download_audio(self):
+    def download_audio(self, extension="mp3"):
         audio = YouTube(self.url, on_progress_callback=on_progress)
-        audio_streams = audio.streams.filter(only_audio=True).first()
-        a_filesize = int(audio_streams.filesize) // 1000000
-        print(f'{audio.title} with size of {a_filesize} MB')
-        audio_streams.download()
+        audio_stream = audio.streams.filter(only_audio=True, file_extension=extension).first()
+        a_filesize = int(audio_stream.filesize) // 1000000
+        print(f'{audio.title} - {a_filesize} MB')
+        audio_stream.download()
 
     def download_playlist(self, video=True, audio=False):
         playlist = Playlist(self.url)
@@ -66,7 +66,8 @@ class ytDownloader:
 url = "https://www.youtube.com/watch?v=wppSoyH-8No"   
 
 yt = ytDownloader(url)
-yt.download_video()
+#yt.download_video()
+yt.download_audio()
 
     
 # create folder and store the videos 
